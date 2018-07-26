@@ -1,0 +1,144 @@
+@import '../../node_modules/bulma/bulma';
+// @import '../../node_modules/prismjs/prism.css';
+
+body {
+  min-height: 100vh;
+}
+
+.welcome {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+
+  .loader {
+    width: 70px;
+    height: 70px;
+    border-color: transparent transparent #ff3860 #ff3860 !important
+  }
+
+  .logo {
+    margin-bottom: 40px;
+
+    .icon {
+      font-size: 90px;
+      color: $dark;
+    }
+  }
+}
+
+.main {
+  padding-top: 30px;
+}
+
+.is-sticky {
+  position: -webkit-sticky;
+  position: -moz-sticky;
+  position: -ms-sticky;
+  position: -o-sticky;
+  position: sticky;
+  top: 60px;
+
+  &.panel-heading {
+    top: 73px;
+  }
+}
+
+
+.is-truncated {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gist-file {
+  .panel-heading {
+    display: flex;
+    align-items: center;
+    padding-top: 13px;
+    padding-bottom: 13px;
+    font-size: 16px;
+
+    .panel-icon { font-size: 16px; }
+
+    .button { margin-left: auto; }
+  }
+}
+
+.gist-new {
+  fieldset {
+    padding: 20px;
+    border: none;
+    border-radius: 4px;
+  }
+
+  .field.has-addons .control:first-child { width: 100%; }
+}
+
+
+// override
+
+.navbar {
+  position: -webkit-sticky;
+  position: -moz-sticky;
+  position: -ms-sticky;
+  position: -o-sticky;
+  position: sticky;
+  top: 0;
+
+  &-brand {
+    align-items: center;
+    width: auto;
+    height: auto;
+  }
+
+  .field.is-grouped {
+    align-items: center;
+    margin-left: auto;
+  }
+}
+
+.hero {
+  &-body {
+    padding-top: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .field {
+    padding-top: 30px;
+  }
+}
+
+.card-image {
+  img { object-fit: cover; }
+}
+
+.panel-block {
+  pre {
+    width: 100%;
+    background: transparent;
+  }
+}
+
+.panel-block--gists {
+  align-items: flex-start;
+
+  .panel-icon { font-size: 24px; }
+
+  &.is-active { border-left-width: 3px; }
+}
+
+.panel-block__text {
+  overflow: hidden;
+
+  * { display: block; }
+}
+
+.control-left {
+  margin-right: auto !important;
+}
