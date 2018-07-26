@@ -10,7 +10,7 @@ class Code extends React.Component {
   codeRef = React.createRef();
 
   componentDidMount() {
-    console.log(this);
+    // console.log(this);
   }
 
   componentWillMount() {

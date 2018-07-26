@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const File = (props) => {
   const { filename, content, index, length } = props || {};
@@ -29,6 +30,10 @@ const File = (props) => {
       </div>
     </fieldset>
   );
-}
+};
+
+File.propTypes = {
+  removeFile: PropTypes.func
+};
 
 export default File;

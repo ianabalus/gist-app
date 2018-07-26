@@ -1,8 +1,16 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 // import Prism from 'prismjs';
 
 class GistFile extends React.Component {
   codeRef = React.createRef();
+
+  static propTypes = {
+    filename: PropTypes.string,
+    type: PropTypes.string,
+    content: PropTypes.string,
+    raw_url: PropTypes.string
+  };
 
   render() {
     // language should be added

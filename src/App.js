@@ -49,7 +49,7 @@ class App extends React.Component {
     const { user, credential } = data;
 
     if (data.credential) {
-      const { accessToken } = credential;
+      // const { accessToken } = credential;
       const keyname = `firebase:authUser:${user.l}:STORAGE`;
       localStorage.setItem(keyname, JSON.stringify(credential));
     }

@@ -13,11 +13,6 @@ const Card = (props) => {
       </div>
       <div className="card-content">
         <div className="media">
-          {/* <div className="media-left">
-            <figure className="image is-48x48">
-              <img src={avatar_url} alt="" />
-            </figure>
-          </div> */}
           <div className="media-content">
             <p className="title is-4">{name}</p>
             <p className="subtitle is-6">{`@${login}`}</p>
@@ -25,30 +20,33 @@ const Card = (props) => {
         </div>
 
         <div className="content">
-          <div className="has-icons-left">
+          {company ? <div className="has-icons-left">
             <span className="icon is-medium is-left">
               <i className="fa fa-building"></i>
             </span>
             <span>{company}</span>
-          </div>
-          <div className="has-icons-left">
+          </div> : ''}
+
+          {location ? <div className="has-icons-left">
             <span className="icon is-medium is-left">
               <i className="fa fa-map-marker"></i>
             </span>
             <span>{location}</span>
-          </div>
-          <div className="has-icons-left">
+          </div> : ''}
+
+          {email ? <div className="has-icons-left">
             <span className="icon is-medium is-left">
               <i className="fa fa-envelope"></i>
             </span>
             <span>{email}</span>
-          </div>
-          <div className="has-icons-left">
+          </div> : ''}
+
+          {html_url ? <div className="has-icons-left">
             <span className="icon is-medium is-left">
               <i className="fa fa-link"></i>
             </span>
             <a href={html_url} title={name} target="_blank">{html_url}</a>
-          </div>
+          </div> : ''}
         </div>
       </div>
     </div>

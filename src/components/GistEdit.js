@@ -1,10 +1,21 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import File from './File';
 
 class GistEdit extends React.Component {
 
+  states = {
+    no_of_files: 1
+  };
+
+  static propTypes = {
+    description: PropTypes.string,
+    files: PropTypes.object,
+    toggleGist: PropTypes.func
+  };
+
   render() {
-    const { description, files } = this.props.gist;
+    const { description, files, toggleGist } = this.props.gist;
 
     return (
       <section className="gist-new">
@@ -25,7 +36,7 @@ class GistEdit extends React.Component {
               <button className="button" type="button">Add File</button>
             </p>
             <p className="control">
-              <button className="button" type="button" onClick={this.props.toggleGist}>Cancel</button>
+              <button className="button" type="button" onClick={toggleGist}>Cancel</button>
             </p>
             <p className="control">
               <button className="button is-link" type="submit">Update public gist</button>

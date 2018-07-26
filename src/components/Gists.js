@@ -5,9 +5,11 @@ class Gists extends React.Component {
   render() {
     let button = null;
 
-    // Show button if gists is more than 5 items
-    // This will change the styling of the container to scroll
-    // By default, the public gists are displayed;
+    /**
+     * Show button if gists is more than 5 items
+     * This will change the styling of the container to scroll
+     * By default, the public gists are displayed;
+    */
     if (this.props.gists.length > 5) {
       button = <div className="panel-block">
         <button className="button is-dark is-fullwidth">show all gists</button>

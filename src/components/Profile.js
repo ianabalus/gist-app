@@ -28,10 +28,23 @@ class Profile extends React.Component {
     isEditing: false
   };
 
+
+  /**
+   * Load all gists before mounting the component
+   * @return {void}
+   */
   componentWillMount() {
     this.loadAllGists();
   }
 
+
+  /**
+   * Get all user's Gist
+   * 1. Will fetch all gists from Github's API
+   * 2. Pass its data to gists state
+   * 3. Load the first gist
+   * @return {Object}
+   */
   loadAllGists = () => {
     this.USER.listGists()
       .then(async ({data}) => {
@@ -40,18 +53,29 @@ class Profile extends React.Component {
       });
   };
 
+
+  /**
+   * Fetch a single gist
+   * @return {Object}
+   */
   loadGist = (index = this.state.activeIndex) => {
     const _id = this.state.gists[index].id;
 
     fetch(`https://api.github.com/gists/${_id}`)
       .then(response => response.json())
       .then(data => {
-        console.log(data);
         this.setState({ gist: data, activeIndex: index, isList: true, isEditing: false });
         this.GIST.__id = _id;
       });
   };
 
+
+  /**
+   * Create a new gist.
+   * 1. New gist should have one or more file
+   * 2. Will load the newly created gist
+   * @return {Object}
+   */
   createGist = (gist = {}) => {
     // Format data
     gist = {
@@ -78,11 +102,23 @@ class Profile extends React.Component {
       });
   };
 
+
+  /**
+   * Edit a gist.
+   * @return {void}
+   */
   editGist = (id) => {
     this.setState({ isEditing: true });
     // console.log(id);
   };
 
+
+  /**
+   * Delete a gist.
+   * Once the current gist is deleted,
+   * will automatically load the previous gist.
+   * @return {void}
+   */
   deleteGist = () => {
     this.GIST.delete()
       .then(() => {
@@ -96,6 +132,11 @@ class Profile extends React.Component {
       });
   };
 
+
+  /**
+   * Enabled/disabled the add new button
+   * @return {void}
+   */
   toggleGist = () => {
     this.setState({ isList: true, isEditing: false })
   }
@@ -108,7 +149,11 @@ class Profile extends React.Component {
       const title = files ? Object.keys(files)[0] : null;
       const _files = files ? files : {};
 
-      view = <GistFile files={_files} title={title} description={description} gist={this.state.gist} editGist={this.editGist} deleteGist={this.deleteGist} />
+      if (this.state.gists.length > 0) {
+        view = <GistFile files={_files} title={title} description={description} gist={this.state.gist} editGist={this.editGist} deleteGist={this.deleteGist} />
+      } else {
+        view = <div><h2 className="title">No gists yet.</h2></div>
+      }
     }
 
     if (!this.state.isList) {
@@ -121,7 +166,7 @@ class Profile extends React.Component {
 
     return (
       <React.Fragment>
-        <nav className="navbar has-background-grey-darker" role="navigation" aria-label="main navigation">
+        <div className="navbar has-background-grey-darker" role="navigation" aria-label="main navigation">
           <div className="container is-widescreen">
             <div className="navbar-brand">
               <span className="icon">
@@ -130,19 +175,14 @@ class Profile extends React.Component {
             </div>
             <div className="field is-grouped is-grouped-right">
               <p className="control">
-                <button className="button" onClick={() => this.setState({ isList: false })} disabled={!this.state.isList}>
-                  {/* <span className="icon is-small">
-                    <i className="far fa-edit"></i>
-                  </span> */}
-                  <span>Add New Gist</span>
-                </button>
+                <button className="button" onClick={() => this.setState({ isList: false })} disabled={!this.state.isList}>Add New Gist</button>
               </p>
               <p className="control">
                 <button className="button is-danger" onClick={this.props.logout}>Log out</button>
               </p>
             </div>
           </div>
-        </nav>
+        </div>
         <div className="main container is-widescreen">
           <div className="columns">
             <div className="column is-4">

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import File from './File';
 
 class GistAdd extends React.Component {
@@ -12,13 +13,18 @@ class GistAdd extends React.Component {
     }
   };
 
+  static propTypes = {
+    createGist: PropTypes.func,
+    toggleGist: PropTypes.func
+  };
+
   componentWillMount() {
     this.addFile();
   }
 
   addFile = () => {
     this.setState(prevState => ({
-      no_of_files: parseInt(prevState.no_of_files) + 1,
+      no_of_files: parseInt(prevState.no_of_files)+1,
       files: [...this.state.files, (parseInt(prevState.no_of_files))]
     }));
   }

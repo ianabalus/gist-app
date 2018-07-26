@@ -1,9 +1,15 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class GistItem extends React.Component {
   state = {
     activeIndex: 0
   }
+
+  static propTypes = {
+    index: PropTypes.number,
+    gist: PropTypes.object
+  };
 
   loadGist = (e) => {
     e.preventDefault();
@@ -16,7 +22,7 @@ class GistItem extends React.Component {
     const first_title = Object.keys(files)[0];
 
     return (
-      <a href="javascript:;"
+      <a href="/"
         className={`panel-block panel-block--gists ${this.is_active}`}
         onClick={this.loadGist}
       >
