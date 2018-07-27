@@ -42,7 +42,7 @@ class GistAdd extends React.Component {
   render() {
     return (
       <section className="gist-new">
-        <h1 className="title">Create New Gist</h1>
+        <h1 className="title">Create gist</h1>
         <form onSubmit={this.handleFormSubmit}>
           <div className="field">
             <div className="control">

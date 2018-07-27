@@ -4,20 +4,23 @@ import Axios from 'axios';
 // import GitHub from 'github-api';
 import { firebaseApp } from './helpers/firebase';
 import Profile from './components/Profile';
+import Preloader from './components/Preloader';
 
 class App extends React.Component {
   state = {
     isLoggedIn: false,
     user: null,
-    detail: null
+    detail: null,
+    isLoading: true
   };
 
   componentWillMount() {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.setState({ isLoaded: true })
-        this.authHandler({user});
+        return this.authHandler({user});
       }
+
+      return this.setState({ isLoading: false });
     })
   }
 
@@ -33,7 +36,7 @@ class App extends React.Component {
     // Indicates that state persist in the current or session or tab
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
     // 2. Set scopes that you want to request from Github
-    provider.addScope('user gist');
+    provider.addScope('gist');
     // 3. Authenticate with Firebase using the Githubprovider
     firebaseApp.auth().signInWithPopup(provider)
       .then(this.authHandler)
@@ -71,16 +74,16 @@ class App extends React.Component {
 
     Axios.get(`https://api.github.com/user`, {
       params: { access_token: accessToken }
-    }).then(async ({ data }) => {
-      await this.setState({ detail: data, isLoggedIn: true, isLoaded: false });
+    }).then(({ data }) => {
+      this.setState({ detail: data, isLoggedIn: true, isLoading: false });
     });
   }
 
-  logOut = async () => {
+  logOut = () => {
     const { l } = this.state.user;
     const key = `firebase:authUser:${l}:STORAGE`;
 
-    await firebase.auth().signOut()
+    firebase.auth().signOut()
       .then(() => {
         localStorage.removeItem(key);
 
@@ -93,6 +96,8 @@ class App extends React.Component {
   }
 
   render() {
+
+    if (this.state.isLoading) { return <Preloader />; }
 
     if (!this.state.isLoggedIn) {
       return (
