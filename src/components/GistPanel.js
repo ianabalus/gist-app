@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Highlight from 'react-highlight';
-// import Prism from 'prismjs';
 
 class GistFile extends React.Component {
-  // codeRef = React.createRef();
 
   static propTypes = {
     filename: PropTypes.string,
