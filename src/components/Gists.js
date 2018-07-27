@@ -8,6 +8,7 @@ class Gists extends React.Component {
     /**
      * Show button if gists is more than 5 items
      * This will change the styling of the container to scroll
+     *
      * By default, the public gists are displayed;
     */
     if (this.props.gists.length > 5) {
@@ -20,7 +21,7 @@ class Gists extends React.Component {
       <nav className="panel has-background-white">
         <p className="panel-heading">your gists</p>
         {this.props.gists.map((gist, index) => (
-          <GistItem key={index} index={index} gist={gist} loadGist={this.props.loadGist} />
+          <GistItem key={index} index={index} activeIndex={this.props.activeIndex} gist={gist} loadGist={this.props.loadGist} />
         ))}
         {button}
       </nav>

@@ -2,9 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class GistItem extends React.Component {
-  state = {
-    activeIndex: 0
-  }
 
   static propTypes = {
     index: PropTypes.number,
@@ -20,10 +17,11 @@ class GistItem extends React.Component {
   render() {
     const { description, files } = this.props.gist;
     const first_title = Object.keys(files)[0];
+    const is_active = this.props.index === this.props.activeIndex ? 'is-active' : '';
 
     return (
       <a href="/"
-        className={`panel-block panel-block--gists ${this.is_active}`}
+        className={`panel-block panel-block--gists ${is_active}`}
         onClick={this.loadGist}
       >
         <span className="panel-icon">

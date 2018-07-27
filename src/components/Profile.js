@@ -5,6 +5,7 @@ import Gists from './Gists';
 import GistFile from './GistFile';
 import GistAdd from './GistAdd';
 import GistEdit from './GistEdit';
+import Modal from './Modal';
 
 class Profile extends React.Component {
   constructor(props) {
@@ -25,7 +26,9 @@ class Profile extends React.Component {
     gist: {},
     activeIndex: 0,
     isList: true,
-    isEditing: false
+    isEditing: false,
+    modalOpen: false,
+    modalType: ''
   };
 
 
@@ -59,14 +62,19 @@ class Profile extends React.Component {
    * @return {Object}
    */
   loadGist = (index = this.state.activeIndex) => {
-    const _id = this.state.gists[index].id;
 
-    fetch(`https://api.github.com/gists/${_id}`)
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ gist: data, activeIndex: index, isList: true, isEditing: false });
-        this.GIST.__id = _id;
-      });
+    return new Promise((resolve, reject) => {
+      const _id = this.state.gists[index].id;
+
+      fetch(`https://api.github.com/gists/${_id}`)
+        .then(response => response.json())
+        .then(data => {
+          this.setState({ gist: data, activeIndex: index, isList: true, isEditing: false });
+          this.GIST.__id = _id;
+
+          resolve(data);
+        }).catch(error => reject(error) );
+    });
   };
 
 
@@ -94,7 +102,6 @@ class Profile extends React.Component {
     // Send request to GitHub API
     this.GIST.create(gist)
       .then(({data}) => {
-        console.log(data);
         // Make sure the created gist will be added to the beginning of the array
         this.setState({ gists: [data, ...this.state.gists]});
         // Load the created gist
@@ -124,11 +131,15 @@ class Profile extends React.Component {
       .then(() => {
         const gists = this.state.gists.filter(gist => gist.id !== this.GIST.__id);
         const index = this.state.activeIndex > 0 ? this.state.activeIndex - 1 : 0;
+
         // Remove the deleted gist from the gist's state
         // This will pass the new array without the deleted gist
         this.setState({ gists });
+
         // Load the previous gist from the array
-        this.loadGist(index);
+        // Will only close the modal when gist has been removed
+        this.loadGist(index)
+          .then(() => this.closeModal());
       });
   };
 
@@ -139,29 +150,71 @@ class Profile extends React.Component {
    */
   toggleGist = () => {
     this.setState({ isList: true, isEditing: false })
-  }
+  };
+
+
+  /**
+   * Open Modal
+   * @return {void}
+   */
+  openModal = (TYPE) => {
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    this.setState({ modalOpen: true, modalType: 'DELETE_GIST' });
+  };
+
+
+  /**
+   * Close Modal
+   * @return {void}
+   */
+  closeModal = () => {
+    document.documentElement.style.overflow = 'initial';
+    document.body.style.overflow = 'initial';
+    this.setState({ modalOpen: false, modalType: '' });
+  };
 
 
   render() {
     let view = null;
+    let modalContent = null;
+
+    // Render Gist File
     if (this.state.gist !== null && this.state.isList) {
       const { files, description } = this.state.gist;
       const title = files ? Object.keys(files)[0] : null;
       const _files = files ? files : {};
 
       if (this.state.gists.length > 0) {
-        view = <GistFile files={_files} title={title} description={description} gist={this.state.gist} editGist={this.editGist} deleteGist={this.deleteGist} />
+        view = <GistFile files={_files} title={title} description={description} gist={this.state.gist} editGist={this.editGist} deleteGist={this.openModal} />
       } else {
         view = <div><h2 className="title">No gists yet.</h2></div>
       }
     }
 
+    // Render Add Gist
     if (!this.state.isList) {
       view = <GistAdd toggleGist={this.toggleGist} createGist={this.createGist} gists={this.state.gists} />
     }
 
+    // Render Gist Edit
     if (this.state.isList && this.state.isEditing) {
       view = <GistEdit toggleGist={this.toggleGist} gist={this.state.gist} />
+    }
+
+    switch (this.state.modalType) {
+      case 'DELETE_GIST':
+        modalContent = <React.Fragment>
+          <p>Are you sure you want to delete this file?</p>
+          <br />
+          <div className="buttons is-right">
+            <button type="button" className="button" onClick={this.closeModal}>Cancel</button>
+            <button type="button" className="button is-danger" onClick={this.deleteGist}>Delete</button>
+          </div>
+        </React.Fragment>
+        break;
+      default:
+        break;
     }
 
     return (
@@ -190,7 +243,7 @@ class Profile extends React.Component {
                 <Card detail={this.props.detail} />
               </div>
               <div className="column is-sticky">
-                <Gists gists={this.state.gists} loadGist={this.loadGist} />
+                <Gists gists={this.state.gists} loadGist={this.loadGist} activeIndex={this.state.activeIndex} />
               </div>
             </div>
             <div className="column is-8">
@@ -200,6 +253,9 @@ class Profile extends React.Component {
             </div>
           </div>
         </div>
+        <Modal show={this.state.modalOpen} closeModal={this.closeModal}>
+          {modalContent}
+        </Modal>
       </React.Fragment>
     );
   }
