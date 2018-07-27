@@ -7,11 +7,7 @@ class GistAdd extends React.Component {
   state = {
     no_of_files: 0, // set default value to 1
     files: [],
-    data: {
-      public: true,
-      description: '',
-      files: {}
-    }
+    disabled: false
   };
 
   // Reference creation
@@ -42,6 +38,8 @@ class GistAdd extends React.Component {
     e.preventDefault();
     e.persist();
 
+    this.setState({ disabled: !this.state.disabled });
+
     const fieldsets = getFieldset(e.target.elements);
     const files = convertFieldsetDataToJSON(fieldsets);
     const gist = {
@@ -50,9 +48,9 @@ class GistAdd extends React.Component {
       files
     };
 
-    console.log(gist);
-
-    this.props.createGist(gist);
+    this.props.createGist(gist, () => {
+      this.setState({ disabled: !this.state.disabled });
+    })
   }
 
   render() {
@@ -72,13 +70,13 @@ class GistAdd extends React.Component {
           </div>
           <div className="field is-grouped is-grouped-right">
             <p className="control control-left">
-              <button className="button" type="button" onClick={this.addFile}>Add file</button>
+              <button className="button" type="button" onClick={this.addFile} disabled={this.state.disabled}>Add file</button>
             </p>
             <p className="control">
-              <button className="button" type="button" onClick={this.props.toggleGist}>Cancel</button>
+              <button className="button" type="button" onClick={this.props.toggleGist} disabled={this.state.disabled}>Cancel</button>
             </p>
             <p className="control">
-              <button className="button is-link" type="submit">Create public gist</button>
+              <button className="button is-link" type="submit" disabled={this.state.disabled}>Create public gist</button>
             </p>
           </div>
         </form>

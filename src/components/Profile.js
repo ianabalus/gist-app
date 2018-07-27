@@ -71,9 +71,9 @@ class Profile extends React.Component {
         .then(data => {
           this.setState({ gist: data, activeIndex: index, isList: true, isEditing: false });
           this.GIST.__id = _id;
-
+          // return data if success
           resolve(data);
-        }).catch(error => reject(error) );
+        }).catch(error => reject(error));
     });
   };
 
@@ -84,29 +84,24 @@ class Profile extends React.Component {
    * 2. Will load the newly created gist
    * @return {Object}
    */
-  createGist = (gist = {}) => {
-    // // Format data
-    // gist = {
-    //    public: true,
-    //    description: 'Two files',
-    //    files: {
-    //       "hello.test": {
-    //          content: "// Test comment\nbody { background-color: white; }",
-    //        },
-    //       "norman-is-in.love": {
-    //          content: "// Norman is in love ❤️\nbody { background-color: white; }"
-    //       }
-    //    }
-    // };
-
+  createGist = (gist = {}, cb) => {
     // Send request to GitHub API
-    this.GIST.create(gist)
-      .then(({data}) => {
-        // Make sure the created gist will be added to the beginning of the array
-        this.setState({ gists: [data, ...this.state.gists]});
-        // Load the created gist
-        this.loadGist(0);
-      });
+    return new Promise((resolve, reject) => {
+      this.GIST.create(gist)
+        .then(({data}) => {
+          // Make sure the created gist will be added to the beginning of the array
+          this.setState({ gists: [data, ...this.state.gists]});
+          // Load the created gist
+          this.loadGist(0);
+          // return data if success
+          resolve(data);
+          // Add a callback function
+          if (cb instanceof Function) {
+            cb.call();
+          }
+        })
+        .catch(error => reject(error));
+    });
   };
 
 
@@ -139,7 +134,8 @@ class Profile extends React.Component {
         // Load the previous gist from the array
         // Will only close the modal when gist has been removed
         this.loadGist(index)
-          .then(() => this.closeModal());
+          .then(() => this.closeModal())
+          .catch(() => this.closeModal());
       });
   };
 
