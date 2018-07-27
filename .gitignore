@@ -9,6 +9,7 @@
 # production
 /build
 /public/static
+/src/helpers/firebase.js
 
 # misc
 .DS_Store
