@@ -85,19 +85,19 @@ class Profile extends React.Component {
    * @return {Object}
    */
   createGist = (gist = {}) => {
-    // Format data
-    gist = {
-       public: true,
-       description: 'Two files',
-       files: {
-          "hello.test": {
-             content: "// Test comment\nbody { background-color: white; }",
-           },
-          "norman-is-in.love": {
-             content: "// Norman is in love ❤️\nbody { background-color: white; }"
-          }
-       }
-    };
+    // // Format data
+    // gist = {
+    //    public: true,
+    //    description: 'Two files',
+    //    files: {
+    //       "hello.test": {
+    //          content: "// Test comment\nbody { background-color: white; }",
+    //        },
+    //       "norman-is-in.love": {
+    //          content: "// Norman is in love ❤️\nbody { background-color: white; }"
+    //       }
+    //    }
+    // };
 
     // Send request to GitHub API
     this.GIST.create(gist)

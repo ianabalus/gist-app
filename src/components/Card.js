@@ -38,7 +38,7 @@ const Card = (props) => {
             <span className="icon is-medium is-left">
               <i className="fa fa-envelope"></i>
             </span>
-            <span>{email}</span>
+            <a href={`mailto:${email}`}>{email}</a>
           </div> : ''}
 
           {html_url ? <div className="has-icons-left">

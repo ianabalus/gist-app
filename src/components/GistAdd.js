@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import File from './File';
+import { getFieldset, convertFieldsetDataToJSON } from '../helpers/forms';
 
 class GistAdd extends React.Component {
   state = {
@@ -12,6 +13,9 @@ class GistAdd extends React.Component {
       files: {}
     }
   };
+
+  // Reference creation
+  descriptionRef = React.createRef();
 
   static propTypes = {
     createGist: PropTypes.func,
@@ -36,7 +40,19 @@ class GistAdd extends React.Component {
 
   handleFormSubmit = (e) => {
     e.preventDefault();
-    this.props.createGist();
+    e.persist();
+
+    const fieldsets = getFieldset(e.target.elements);
+    const files = convertFieldsetDataToJSON(fieldsets);
+    const gist = {
+      public: true,
+      description: this.descriptionRef.current.value,
+      files
+    };
+
+    console.log(gist);
+
+    this.props.createGist(gist);
   }
 
   render() {
@@ -46,11 +62,13 @@ class GistAdd extends React.Component {
         <form onSubmit={this.handleFormSubmit}>
           <div className="field">
             <div className="control">
-              <input className="input" type="text" placeholder="Gist description..." />
+              <input className="input" ref={this.descriptionRef} type="text" placeholder="Gist description..." />
             </div>
           </div>
           <div className="field">
-            {this.state.files.map(key => <File key={key} index={key} removeFile={this.removeFile} length={this.state.no_of_files} />)}
+            {this.state.files.map(key =>
+              <File key={key} index={key} removeFile={this.removeFile} length={this.state.no_of_files} />
+            )}
           </div>
           <div className="field is-grouped is-grouped-right">
             <p className="control control-left">
