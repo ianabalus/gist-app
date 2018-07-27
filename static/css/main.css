@@ -8573,4 +8573,8 @@ body {
   margin-right: auto !important;
 }
 
+.modal-content {
+  width: 440px !important;
+}
+
 /*# sourceMappingURL=main.css.map */
